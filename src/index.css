@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --font-race-en: "race_en", serif;
+  --font-race-kr: "race_kr", sans-serif;
+  --font-name-jp: "name_jp", sans-serif;
+
+  --color-ygo-frame-monster: #C29B62;
+  --color-ygo-frame-spell: #1D9E74;
+  --color-ygo-frame-trap: #BC5A84;
+}
+
+@layer base {
+
+  /* 영문 몬스터 종족/타입 표기 */
+  @font-face {
+    font-family: 'race_en';
+    src: url('/assets/fonts/race_en.woff2') format('woff2');
+    font-weight: bold;
+  }
+
+  /* 영문 펜듈럼 스케일 숫자 */
+  @font-face {
+    font-family: 'pen_scale';
+    src: url('/assets/fonts/pen_scale.woff2') format('woff2');
+    font-weight: bold;
+  }
+
+  /* 영문 본문 텍스트 */
+  @font-face {
+    font-family: 'text_en';
+    src: url('/assets/fonts/text_en.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 영문 카드 이름 / ATK DEF 수치 */
+  @font-face {
+    font-family: 'name_en';
+    src: url('/assets/fonts/name_en.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 한글 카드 이름 기본 */
+  @font-face {
+    font-family: 'name_kr_base';
+    src: url('/assets/fonts/name_kr_base.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 한글 카드 이름 대체 */
+  @font-face {
+    font-family: 'name_kr_alt';
+    src: url('/assets/fonts/name_kr_alt.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 한글 종족/타입 표기 */
+  @font-face {
+    font-family: 'race_kr';
+    src: url('/assets/fonts/race_kr.woff2') format('woff2');
+    font-weight: bold;
+  }
+
+  /* 한글 본문 텍스트 */
+  @font-face {
+    font-family: 'text_kr';
+    src: url('/assets/fonts/text_kr.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 일본어 카드 이름 */
+  @font-face {
+    font-family: 'name_jp';
+    src: url('/assets/fonts/name_jp.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 일본어 본문 텍스트 / 종족 표기 */
+  @font-face {
+    font-family: 'text_jp';
+    src: url('/assets/fonts/text_jp.woff2') format('woff2');
+    font-weight: normal;
+  }
+
+  /* 카드 번호/시리얼 (노멀) */
+  @font-face {
+    font-family: 'code';
+    src: url('/assets/fonts/code_nor.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  /* 카드 번호/시리얼 (이탤릭) */
+  @font-face {
+    font-family: 'code';
+    src: url('/assets/fonts/code_itl.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  /* 카드 번호/시리얼 (볼드) */
+  @font-face {
+    font-family: 'code';
+    src: url('/assets/fonts/code_bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  /* 링크 번호 */
+  @font-face {
+    font-family: 'lnk_no';
+    src: url('/assets/fonts/lnk_no.woff2') format('woff2');
+    font-weight: bold;
+  }
+
+  body {
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+}
