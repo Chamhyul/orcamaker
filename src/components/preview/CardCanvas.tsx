@@ -54,7 +54,8 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
             link.click();
         }
     }), []);
-    const store = useCardStore();
+    const rawStore = useCardStore();
+    const store = { ...rawStore, cardClass: rawStore.cardClass || '일반' } as typeof rawStore;
     // 진행 중인 렌더 취소용 플래그
     const renderIdRef = useRef(0);
 
@@ -137,7 +138,7 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
         ctx.fillText(store.cardName, 63, 94, nameMaxWidth);
         ctx.textBaseline = 'alphabetic';
 
-        // 5. Draw Level/Rank (링크 제외 모스터에만 표시)
+        // 5. Draw Level/Rank (링크 제외 모스터에만 표시) / 마법 & 함정 분류 텍스트
         if ((store.cardType === '몬스터' || (store.cardType === '토큰' && store.cardClass === '일반')) && store.cardClass !== '링크') {
             const starImg = await loadImage(`/assets/images/${store.cardClass === '엑시즈' ? 'level_eyz.webp' : 'level.webp'}`);
             const count = parseInt(store.cardClass === '엑시즈' ? store.rank : store.level) || 0;
@@ -148,6 +149,50 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
                 } else {
                     // Level: guideline5(79.5%) right edge → (392.5-78)×2.37=745px, size=22.67dp×2.37=54px
                     ctx.drawImage(starImg, 677.5 - i * 53.8, 144.5, 50, 50);
+                }
+            }
+        } else if (store.cardType === '마법' || store.cardType === '함정') {
+            const isSpell = store.cardType === '마법';
+            const typeTextBase = isSpell ? '[마법 카드' : '[함정 카드';
+            const hasIcon = store.cardClass !== '일반';
+            const typeText = hasIcon ? `${typeTextBase}    ]` : `${typeTextBase}]`;
+            const typeFontInfo = store.language === 'en' ? 'bold 36px "race_en"' : store.language === 'ja' ? '32px "text_jp"' : 'bold 39px "race_kr"';
+            ctx.font = `${typeFontInfo}, sans-serif`;
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'right';
+
+            const textRightEdge = 735;
+            const textY = 179;
+
+            const xScale = 1.25;
+            ctx.save();
+            ctx.scale(xScale, 1);
+            ctx.fillText(typeText, textRightEdge / xScale, textY);
+            ctx.restore();
+
+            ctx.textAlign = 'left';
+
+            if (hasIcon) {
+                let iconSrc = '';
+                if (isSpell) {
+                    if (store.cardClass === '장착') iconSrc = 'equip.webp';
+                    else if (store.cardClass === '필드') iconSrc = 'field.webp';
+                    else if (store.cardClass === '속공') iconSrc = 'quick_play.webp';
+                    else if (store.cardClass === '의식') iconSrc = 'ritual_magic.webp';
+                    else if (store.cardClass === '지속') iconSrc = 'continuous.webp';
+                } else {
+                    if (store.cardClass === '지속') iconSrc = 'continuous.webp';
+                    else if (store.cardClass === '카운터') iconSrc = 'counter.webp';
+                }
+
+                if (iconSrc) {
+                    const typeIcon = await loadImage(`/assets/images/${iconSrc}`);
+                    const bracketWidth = ctx.measureText(']').width;
+                    const iconSize = 42;
+                    // bracket 너비에 공간 조금 더 주는 계산
+                    const iconX = textRightEdge - bracketWidth - iconSize - 4;
+                    const iconY = textY - iconSize + 8;
+                    ctx.drawImage(typeIcon, iconX, iconY, iconSize, iconSize);
                 }
             }
         }
@@ -190,10 +235,19 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
         // 7. Draw Card Text (Effect / Flavor)
         // ── 카드 텍스트 기본 폰트 크기 (여기서 조절하세요) ──
         const CARD_TEXT_DEFAULT_FONT_SIZE = 21;
-        const textX = 64;
-        const textY = 945;
-        const maxWidth = 684;
-        const maxHeight = 151;
+        let textX = 64;
+        let textY = 945;
+        let maxWidth = 684;
+        let maxHeight = 151;
+
+        if (store.cardType === '마법' || store.cardType === '함정' || (store.cardType === '토큰' && store.cardClass === '스탯X')) {
+            // 종족 라인이 없는 경우 위치 조정 (추후 사용자가 오프셋 조정 가능)
+            textX = 64;
+            textY = 914;
+            maxWidth = 684;
+            maxHeight = 178;
+        }
+
         ctx.fillStyle = 'black';
         drawAutoSizedText(ctx, store.cardText, textX, textY, maxWidth, maxHeight, store.language, CARD_TEXT_DEFAULT_FONT_SIZE);
 
@@ -203,19 +257,44 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
             ctx.fillStyle = 'black';
             ctx.textAlign = 'right';
             // ATK
-            const xScale = 1.05;
             const atkText = store.isAtkUnknown ? '?' : (store.atk || '0');
             ctx.save();
-            ctx.scale(xScale, 1);
-            ctx.fillText(atkText, 579 / xScale, 1106);
+            if (store.isAtkUnknown) {
+                // ATK가 '?' 일 때의 위치 및 배율 (사용자 조정용)
+                const unknownAtkX = 579;
+                const unknownAtkY = 1105;
+                const unknownAtkxScale = 1;
+                const unknownAtkyScale = 1.15;
+                ctx.scale(unknownAtkxScale, unknownAtkyScale);
+                ctx.fillText(atkText, unknownAtkX / unknownAtkxScale, unknownAtkY / unknownAtkyScale);
+            } else {
+                const atkX = 579;
+                const atkY = 1106;
+                const xScale = 1.05;
+                ctx.scale(xScale, 1);
+                ctx.fillText(atkText, atkX / xScale, atkY);
+            }
             ctx.restore();
 
             // DEF (Except Link): guideline5(79.5%-5dp)=(392.5-78)×2.37=745px
             if (store.cardClass !== '링크') {
                 const defText = store.isDefUnknown ? '?' : (store.def || '0');
                 ctx.save();
-                ctx.scale(xScale, 1);
-                ctx.fillText(defText, 744 / xScale, 1106);
+                if (store.isDefUnknown) {
+                    // DEF가 '?' 일 때의 위치 및 배율 (사용자 조정용)
+                    const unknownDefX = 744;
+                    const unknownDefY = 1105;
+                    const unknownDefxScale = 1;
+                    const unknownDefyScale = 1.15;
+                    ctx.scale(unknownDefxScale, unknownDefyScale);
+                    ctx.fillText(defText, unknownDefX / unknownDefxScale, unknownDefY / unknownDefyScale);
+                } else {
+                    const defX = 744;
+                    const defY = 1106;
+                    const xScale = 1.05;
+                    ctx.scale(xScale, 1);
+                    ctx.fillText(defText, defX / xScale, defY);
+                }
                 ctx.restore();
             } else {
                 // LINK Rating
@@ -288,9 +367,15 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
 
         // Copyright
         if (store.showCopyright) {
-            const creatorImg = await loadImage(`/assets/images/creator.webp`);
-            // Width 118, Height 10 -> scaled up appropriately for 813x1185 canvas (approx x2.3)
-            ctx.drawImage(creatorImg, 420, 1133, 236, 20);
+            if (store.copyrightType === 1) {
+                // creator_2.webp: 좌측 정렬 
+                const creatorImg2 = await loadImage(`/assets/images/creator_2.webp`);
+                ctx.drawImage(creatorImg2, 362, 1131); // 원본 크기 사용
+            } else {
+                // creator.webp: 기본 정렬 (2)
+                const creatorImg = await loadImage(`/assets/images/creator.webp`);
+                ctx.drawImage(creatorImg, 464, 1131); // 원본 크기 사용
+            }
         }
 
         // Hologram (Eye of Anubis)

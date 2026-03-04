@@ -38,10 +38,10 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col h-[80vh] md:h-auto md:max-h-[85vh]">
-                <div className="flex items-center justify-between p-4 border-b border-gray-800 shrink-0">
-                    <h2 className="text-white font-bold text-lg">기본 일러스트 설정</h2>
-                    <button onClick={onClose} className="p-2 text-gray-500 hover:text-white transition-colors bg-gray-800 hover:bg-gray-700 rounded-md">
+            <div className="bg-bg-surface border border-border rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col h-[80vh] md:h-auto md:max-h-[85vh]">
+                <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
+                    <h2 className="text-text-primary font-bold text-lg">기본 일러스트 설정</h2>
+                    <button onClick={onClose} className="p-2 text-text-secondary hover:text-text-primary transition-colors bg-bg-sub hover:bg-bg-header rounded-md">
                         ✕
                     </button>
                 </div>
@@ -59,9 +59,9 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
                     />
                 </div>
 
-                <div className="p-5 bg-gray-900 space-y-4 shrink-0">
+                <div className="p-5 bg-bg-surface space-y-4 shrink-0">
                     <div className="flex items-center gap-4">
-                        <span className="text-sm text-gray-400 font-medium shrink-0">확대/축소</span>
+                        <span className="text-sm text-text-secondary font-medium shrink-0">확대/축소</span>
                         <input
                             type="range"
                             value={zoom}
@@ -72,21 +72,21 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
                             onChange={(e) => {
                                 setZoom(Number(e.target.value));
                             }}
-                            className="flex-1 accent-blue-500 bg-gray-700 rounded-lg h-2 appearance-none cursor-pointer"
+                            className="flex-1 accent-primary bg-bg-sub rounded-lg h-2 appearance-none cursor-pointer"
                         />
                     </div>
 
                     <div className="flex gap-3 justify-end pt-2">
                         <button
                             onClick={onClose}
-                            className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold transition-colors border border-gray-700 shadow flex items-center gap-2"
+                            className="px-6 py-2.5 bg-bg-sub hover:bg-bg-header text-text-primary rounded-xl font-bold transition-colors border border-border shadow flex items-center gap-2"
                         >
                             취소
                         </button>
                         <button
                             onClick={handleSave}
                             disabled={isSaving}
-                            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-colors shadow-lg shadow-blue-500/30 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-6 py-2.5 bg-primary hover:opacity-90 text-white rounded-xl font-bold transition-colors shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSaving ? '저장 중...' : '확인'}
                         </button>

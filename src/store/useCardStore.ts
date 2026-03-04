@@ -19,6 +19,7 @@ export type Language = 'ko' | 'en' | 'ja'
 
 export interface CardState {
     // 0. 전역 설정
+    theme: 'light' | 'dark'
     language: Language
 
     // 1. 공통 정보
@@ -59,6 +60,7 @@ export interface CardState {
     showSetNumber: boolean
     showHoloMark: boolean
     showCopyright: boolean
+    copyrightType: 1 | 2
     cardImage: string | null
 
     // --- Setter Actions ---
@@ -68,6 +70,7 @@ export interface CardState {
 export const useCardStore = create<CardState>()(
     persist(
         (set) => ({
+            theme: 'dark', // default to dark
             language: 'ko',
             cardType: '몬스터',
             cardClass: '', // 초기 placeholder 처리를 위해 빈 문자열
@@ -102,6 +105,7 @@ export const useCardStore = create<CardState>()(
             showSetNumber: false,
             showHoloMark: false,
             showCopyright: false,
+            copyrightType: 2,
             cardImage: null,
 
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),

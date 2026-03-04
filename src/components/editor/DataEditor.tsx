@@ -130,8 +130,8 @@ export function DataEditor() {
         <div className="flex flex-col flex-1 w-full h-full min-h-full">
 
             {/* 1. 기본 설정 (종류, 분류) */}
-            <section id="data-editor-sticky" className="sticky top-0 z-20 bg-gray-900 pt-5 md:pt-8 px-5 md:px-8">
-                <div className="space-y-5 pb-6 border-b border-gray-700">
+            <section id="data-editor-sticky" className="sticky top-0 z-20 bg-bg-body pt-5 md:pt-8 px-5 md:px-8">
+                <div className="space-y-5 pb-6 border-b border-border">
                     <FormRow>
                         <SegmentControl
                             options={['몬스터', '마법', '함정', '토큰']}
@@ -141,7 +141,7 @@ export function DataEditor() {
                     </FormRow>
 
                     <FormRow>
-                        <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-10">
+                        <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-10">
                             <div className="flex-1 min-w-0">
                                 <Select
                                     className="border-none bg-transparent h-full"
@@ -162,9 +162,9 @@ export function DataEditor() {
                             </div>
                             {store.cardType === '몬스터' && (
                                 <>
-                                    <div className="w-[1px] bg-gray-700 my-2" />
-                                    <div className={`flex items-center px-3 gap-2 bg-gray-800/50 ${store.cardClass === '링크' ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                                        <span className="text-sm font-medium text-gray-400">펜듈럼</span>
+                                    <div className="w-[1px] bg-border my-2" />
+                                    <div className={`flex items-center px-3 gap-2 bg-bg-sub/50 ${store.cardClass === '링크' ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                                        <span className="text-sm font-medium text-text-secondary">펜듈럼</span>
                                         <ToggleSwitch
                                             checked={store.isPendulum}
                                             onChange={(c) => { if (store.cardClass !== '링크') store.updateField('isPendulum', c) }}
@@ -205,7 +205,7 @@ export function DataEditor() {
                                             />
                                             <button
                                                 onClick={() => setIsNameSettingsOpen(!isNameSettingsOpen)}
-                                                className={`absolute right-3 p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded-md transition-all duration-200 ${isNameSettingsOpen ? 'rotate-180 bg-white/5' : ''}`}
+                                                className={`absolute right-3 p-1.5 text-text-muted hover:text-text-primary hover:bg-bg-header rounded-md transition-all duration-200 ${isNameSettingsOpen ? 'rotate-180 bg-bg-sub' : ''}`}
                                                 title="확장 설정 열기"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -214,9 +214,9 @@ export function DataEditor() {
                                             </button>
                                         </div>
                                         {isNameSettingsOpen && (
-                                            <div className="bg-gray-800/80 border border-gray-700/80 rounded-lg p-4 mt-1 animate-in slide-in-from-top-2 fade-in duration-200 shadow-lg space-y-4">
+                                            <div className="bg-bg-sub border border-border rounded-lg p-4 mt-1 animate-in slide-in-from-top-2 fade-in duration-200 shadow-lg space-y-4">
                                                 <div className="space-y-2">
-                                                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">폰트</label>
+                                                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider block">폰트</label>
                                                     <SegmentControl
                                                         options={['폰트1', '폰트2']}
                                                         value={store.cardNameFont === 'name_kr_base' ? '폰트1' : '폰트2'}
@@ -224,7 +224,7 @@ export function DataEditor() {
                                                     />
                                                 </div>
                                                 <div className="space-y-3">
-                                                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">이름 색상</label>
+                                                    <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider block">이름 색상</label>
                                                     <div className="flex flex-wrap gap-2.5">
                                                         {(() => {
                                                             const defaultColor = (store.cardClass === '엑시즈' || store.cardType === '마법' || store.cardType === '함정') ? '#ffffff' : '#000000';
@@ -243,7 +243,7 @@ export function DataEditor() {
                                                                 <button
                                                                     key={color.value}
                                                                     onClick={() => store.updateField('cardNameColor', color.value as any)}
-                                                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${store.cardNameColor === color.value ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-gray-800 scale-110' : 'hover:scale-110 hover:ring-2 hover:ring-gray-500 hover:ring-offset-1 hover:ring-offset-gray-800'}`}
+                                                                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${store.cardNameColor === color.value ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-sub scale-110' : 'hover:scale-110 hover:ring-2 hover:ring-border hover:ring-offset-1 hover:ring-offset-bg-sub'}`}
                                                                     style={{
                                                                         backgroundColor: color.value === 'default' ? '#4b5563' : color.value,
                                                                         border: color.value === '#000000' ? '1px solid #4b5563' : 'none',
@@ -252,7 +252,7 @@ export function DataEditor() {
                                                                     title={color.hint}
                                                                 >
                                                                     {color.value === 'default' && (
-                                                                        <span className="text-[10px] font-bold text-gray-300">기본</span>
+                                                                        <span className="text-[10px] font-bold text-white/70">기본</span>
                                                                     )}
                                                                 </button>
                                                             ))
@@ -277,7 +277,7 @@ export function DataEditor() {
                                                     <button
                                                         ref={popoverButtonRef}
                                                         onClick={() => setIsLinkPopoverOpen(!isLinkPopoverOpen)}
-                                                        className="w-full h-10 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                                                        className="w-full h-10 px-3 bg-primary hover:opacity-90 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2"
                                                     >
                                                         LNK-{Object.values(store.linkMarkers).filter(Boolean).length} 설정
                                                     </button>
@@ -288,31 +288,31 @@ export function DataEditor() {
                                                             ref={popoverRef}
                                                             className="absolute top-full left-1/2 -translate-x-1/2 mt-3 z-50 animate-in fade-in zoom-in slide-in-from-top-2 duration-200"
                                                         >
-                                                            <div className="bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-5 w-52 relative border-t-2 border-t-blue-500/30">
+                                                            <div className="bg-bg-surface border border-border rounded-2xl shadow-2xl p-5 w-52 relative border-t-2 border-t-primary/30">
                                                                 <div className="flex items-center justify-between mb-4">
-                                                                    <h3 className="text-white font-bold text-sm">링크 마커</h3>
-                                                                    <span className="bg-blue-900/40 text-blue-400 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                                                    <h3 className="text-text-primary font-bold text-sm">링크 마커</h3>
+                                                                    <span className="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">
                                                                         LNK-{Object.values(store.linkMarkers).filter(Boolean).length}
                                                                     </span>
                                                                 </div>
 
-                                                                <div className="grid grid-cols-3 gap-2 w-full aspect-square mx-auto p-1.5 bg-gray-800 rounded-xl border border-gray-700 shadow-inner">
+                                                                <div className="grid grid-cols-3 gap-2 w-full aspect-square mx-auto p-1.5 bg-bg-sub rounded-xl border border-border shadow-inner">
                                                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => {
-                                                                        if (i === 5) return <div key={i} className="bg-gray-900/30 rounded-lg"></div>
+                                                                        if (i === 5) return <div key={i} className="bg-bg-body/30 rounded-lg"></div>
                                                                         const active = store.linkMarkers[i] || false
                                                                         return (
                                                                             <button
                                                                                 key={i}
                                                                                 onClick={() => store.updateField('linkMarkers', { ...store.linkMarkers, [i]: !active })}
-                                                                                className={`transition-all rounded-lg transform active:scale-90 ${active ? 'bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.4)]' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                                                                className={`transition-all rounded-lg transform active:scale-90 ${active ? 'bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.4)]' : 'bg-bg-header hover:bg-border'}`}
                                                                             />
                                                                         )
                                                                     })}
                                                                 </div>
 
                                                                 {/* 말풍선 꼬리 (위쪽) */}
-                                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-gray-700">
-                                                                    <div className="absolute top-[1px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-gray-900"></div>
+                                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-border">
+                                                                    <div className="absolute top-[1px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-bg-surface"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -373,7 +373,7 @@ export function DataEditor() {
                                                             store.updateField('race', '');
                                                             store.updateField('customRace', '');
                                                         }}
-                                                        className="absolute right-3 p-1 text-gray-500 hover:text-white transition-colors"
+                                                        className="absolute right-3 p-1 text-text-muted hover:text-text-primary transition-colors"
                                                         title="목록으로 돌아가기"
                                                     >
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -403,18 +403,18 @@ export function DataEditor() {
                     <section className="space-y-5">
                         {/* 펜듈럼 입력창: 카드 텍스트 바로 위로 이동 */}
                         {store.isPendulum && store.cardType === '몬스터' && (
-                            <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-24 mb-4">
+                            <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-24 mb-4">
                                 {/* 좌측 스케일 */}
-                                <div className="w-20 relative bg-gray-800/30 flex items-center justify-center">
+                                <div className="w-20 relative bg-bg-header/30 flex items-center justify-center">
                                     {!store.pendulumScaleLeft && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-[11px] leading-tight text-gray-500 pointer-events-none select-none">
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-[11px] leading-tight text-text-muted pointer-events-none select-none">
                                             <span>스케일</span>
                                             <span>(좌)</span>
                                         </div>
                                     )}
                                     <input
                                         type="text"
-                                        className="w-full h-full bg-transparent text-center text-xl font-bold text-blue-400 outline-none relative z-10"
+                                        className="w-full h-full bg-transparent text-center text-xl font-bold text-primary outline-none relative z-10"
                                         value={store.pendulumScaleLeft}
                                         onChange={(e) => {
                                             const val = e.target.value.replace(/[^0-9]/g, '');
@@ -423,31 +423,31 @@ export function DataEditor() {
                                     />
                                 </div>
 
-                                <div className="w-[1px] bg-gray-700 h-full" />
+                                <div className="w-[1px] bg-border h-full" />
 
                                 {/* 중앙 펜듈럼 텍스트 */}
                                 <textarea
                                     ref={pendulumTextareaRef}
-                                    className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-gray-200 placeholder-gray-500 resize-none h-full"
+                                    className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted resize-none h-full"
                                     placeholder="펜듈럼 텍스트"
                                     value={store.pendulumText}
                                     onChange={(e) => store.updateField('pendulumText', e.target.value)}
                                     onFocus={() => setLastFocusedTextarea('pendulumText')}
                                 />
 
-                                <div className="w-[1px] bg-gray-700 h-full" />
+                                <div className="w-[1px] bg-border h-full" />
 
                                 {/* 우측 스케일 */}
-                                <div className="w-20 relative bg-gray-800/30 flex items-center justify-center">
+                                <div className="w-20 relative bg-bg-header/30 flex items-center justify-center">
                                     {!store.pendulumScaleRight && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-[11px] leading-tight text-gray-500 pointer-events-none select-none">
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-[11px] leading-tight text-text-muted pointer-events-none select-none">
                                             <span>스케일</span>
                                             <span>(우)</span>
                                         </div>
                                     )}
                                     <input
                                         type="text"
-                                        className="w-full h-full bg-transparent text-center text-xl font-bold text-blue-400 outline-none relative z-10"
+                                        className="w-full h-full bg-transparent text-center text-xl font-bold text-primary outline-none relative z-10"
                                         value={store.pendulumScaleRight}
                                         onChange={(e) => {
                                             const val = e.target.value.replace(/[^0-9]/g, '');
@@ -461,7 +461,7 @@ export function DataEditor() {
                         <FormRow>
                             <textarea
                                 ref={textareaRef}
-                                className="w-full h-32 bg-gray-800 border border-gray-700 text-gray-200 text-sm p-3 rounded-md resize-y outline-none focus:border-blue-500"
+                                className="w-full h-32 bg-bg-sub border border-border text-text-primary text-sm p-3 rounded-md resize-y outline-none"
                                 placeholder="카드 텍스트"
                                 value={store.cardText}
                                 onChange={(e) => store.updateField('cardText', e.target.value)}
@@ -476,7 +476,7 @@ export function DataEditor() {
                                     <button
                                         key={char}
                                         onClick={() => insertNumber(char)}
-                                        className="h-10 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-md text-sm font-bold border border-gray-700 transition-colors"
+                                        className="h-10 flex items-center justify-center bg-bg-sub hover:bg-bg-header text-text-secondary rounded-md text-sm font-bold border border-border transition-colors"
                                     >
                                         {char}
                                     </button>
@@ -506,8 +506,8 @@ export function DataEditor() {
                                                 key={attr}
                                                 onClick={() => toggleAttribute(attr)}
                                                 className={`py-1.5 text-xs font-bold rounded-md border transition-all w-full ${active
-                                                    ? 'bg-blue-600/20 text-blue-400 border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
-                                                    : 'bg-gray-800/50 text-gray-400 border-gray-700 hover:border-gray-500'
+                                                    ? 'bg-primary/20 text-primary border-primary/50 shadow-[0_0_10px_rgba(0,150,136,0.2)]'
+                                                    : 'bg-bg-sub text-text-secondary border-border hover:border-text-muted'
                                                     }`}
                                             >
                                                 {attr}
@@ -532,15 +532,15 @@ export function DataEditor() {
 
                     {/* 5. 스탯 정보 영역 (토큰(스탯X) 제외) */}
                     {store.cardType !== '마법' && store.cardType !== '함정' && !(store.cardType === '토큰' && store.cardClass === '스탯X') && (
-                        <section className="space-y-5 border-t border-gray-700 pt-6 mt-6">
+                        <section className="space-y-5 border-t border-border pt-6 mt-6">
                             <div className="grid grid-cols-2 gap-4">
                                 {/* 공격력 */}
                                 <div className="min-w-0">
                                     <FormRow>
-                                        <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-10">
+                                        <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-10">
                                             <input
                                                 type="text"
-                                                className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-gray-200 placeholder-gray-500 min-w-0"
+                                                className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted min-w-0"
                                                 placeholder="공격력 (ATK)"
                                                 value={store.isAtkUnknown ? '?' : store.atk}
                                                 onChange={(e) => {
@@ -549,9 +549,9 @@ export function DataEditor() {
                                                 }}
                                                 disabled={store.isAtkUnknown}
                                             />
-                                            <div className="w-[1px] bg-gray-700 my-2" />
-                                            <div className="flex items-center px-3 gap-2 bg-gray-800/50">
-                                                <span className="text-sm font-medium text-gray-400">?</span>
+                                            <div className="w-[1px] bg-border my-2" />
+                                            <div className="flex items-center px-3 gap-2 bg-bg-header/50">
+                                                <span className="text-sm font-medium text-text-secondary">?</span>
                                                 <ToggleSwitch
                                                     checked={store.isAtkUnknown}
                                                     onChange={(c) => store.updateField('isAtkUnknown', c)}
@@ -565,10 +565,10 @@ export function DataEditor() {
                                 {store.cardClass !== '링크' ? (
                                     <div className="min-w-0">
                                         <FormRow>
-                                            <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-10">
+                                            <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-10">
                                                 <input
                                                     type="text"
-                                                    className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-gray-200 placeholder-gray-500 min-w-0"
+                                                    className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted min-w-0"
                                                     placeholder="수비력 (DEF)"
                                                     value={store.isDefUnknown ? '?' : store.def}
                                                     onChange={(e) => {
@@ -577,9 +577,9 @@ export function DataEditor() {
                                                     }}
                                                     disabled={store.isDefUnknown}
                                                 />
-                                                <div className="w-[1px] bg-gray-700 my-2" />
-                                                <div className="flex items-center px-3 gap-2 bg-gray-800/50">
-                                                    <span className="text-sm font-medium text-gray-400">?</span>
+                                                <div className="w-[1px] bg-border my-2" />
+                                                <div className="flex items-center px-3 gap-2 bg-bg-header/50">
+                                                    <span className="text-sm font-medium text-text-secondary">?</span>
                                                     <ToggleSwitch
                                                         checked={store.isDefUnknown}
                                                         onChange={(c) => store.updateField('isDefUnknown', c)}
@@ -595,14 +595,14 @@ export function DataEditor() {
                         </section>
                     )}
 
-                    <section className="space-y-5 border-t border-gray-700 pt-6 mt-6">
+                    <section className="space-y-5 border-t border-border pt-6 mt-6">
                         <div className="grid grid-cols-2 gap-4">
                             {/* 일련번호 */}
                             <FormRow>
-                                <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-10 w-full">
+                                <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-10 w-full">
                                     <input
                                         type="text"
-                                        className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-gray-200 placeholder-gray-500 min-w-0"
+                                        className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted min-w-0"
                                         placeholder="일련번호 (8자리)"
                                         value={store.serialNumber}
                                         maxLength={8}
@@ -611,7 +611,7 @@ export function DataEditor() {
                                             store.updateField('serialNumber', val);
                                         }}
                                     />
-                                    <div className="flex items-center px-3 bg-gray-800/50">
+                                    <div className="flex items-center px-3 bg-bg-header/50">
                                         <ToggleSwitch
                                             checked={store.showSerialNumber}
                                             onChange={(c) => store.updateField('showSerialNumber', c)}
@@ -622,15 +622,15 @@ export function DataEditor() {
 
                             {/* 카드 번호 */}
                             <FormRow>
-                                <div className="flex bg-gray-800 border border-gray-700 rounded-md focus-within:border-blue-500 transition-colors overflow-hidden h-10 w-full">
+                                <div className="flex bg-bg-sub border border-border rounded-md transition-colors overflow-hidden h-10 w-full">
                                     <input
                                         type="text"
-                                        className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-gray-200 placeholder-gray-500 min-w-0"
+                                        className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted min-w-0"
                                         placeholder="카드 번호"
                                         value={store.setNumber}
                                         onChange={(e) => store.updateField('setNumber', e.target.value)}
                                     />
-                                    <div className="flex items-center px-3 bg-gray-800/50">
+                                    <div className="flex items-center px-3 bg-bg-header/50">
                                         <ToggleSwitch
                                             checked={store.showSetNumber}
                                             onChange={(c) => store.updateField('showSetNumber', c)}
@@ -640,15 +640,25 @@ export function DataEditor() {
                             </FormRow>
 
                             {/* 홀로그램 마크 */}
-                            <div className="flex items-center justify-between bg-gray-800/30 px-3 py-2 rounded-md border border-gray-700/50">
-                                <span className="text-sm text-gray-400">홀로그램 마크</span>
+                            <div className="flex items-center justify-between bg-bg-sub/30 px-3 py-2 rounded-md border border-border">
+                                <span className="text-sm text-text-secondary">홀로그램 마크</span>
                                 <ToggleSwitch checked={store.showHoloMark} onChange={(c) => store.updateField('showHoloMark', c)} />
                             </div>
 
                             {/* 저작권자 텍스트 */}
-                            <div className="flex items-center justify-between bg-gray-800/30 px-3 py-2 rounded-md border border-gray-700/50">
-                                <span className="text-sm text-gray-400">저작권자 텍스트</span>
-                                <ToggleSwitch checked={store.showCopyright} onChange={(c) => store.updateField('showCopyright', c)} />
+                            <div className="flex items-center justify-between bg-bg-sub/30 px-3 py-2 rounded-md border border-border">
+                                <span className="text-sm text-text-secondary">저작권자 텍스트</span>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-14">
+                                        <SegmentControl
+                                            size="sm"
+                                            options={['1', '2']}
+                                            value={store.copyrightType.toString()}
+                                            onChange={(val: any) => store.updateField('copyrightType', parseInt(val) as 1 | 2)}
+                                        />
+                                    </div>
+                                    <ToggleSwitch checked={store.showCopyright} onChange={(c) => store.updateField('showCopyright', c)} />
+                                </div>
                             </div>
                         </div>
                     </section>

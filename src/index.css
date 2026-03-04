@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* 전역 색상 전환 */
+*,
+*::before,
+*::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 @theme {
   --font-race-en: "race_en", serif;
   --font-race-kr: "race_kr", sans-serif;
@@ -8,9 +15,52 @@
   --color-ygo-frame-monster: #C29B62;
   --color-ygo-frame-spell: #1D9E74;
   --color-ygo-frame-trap: #BC5A84;
+
+  /* Theme variables Mapping */
+  --color-bg-body: var(--bg-body);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-sub: var(--bg-sub);
+  --color-bg-header: var(--bg-header);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-primary: var(--primary-color);
+  --color-border: var(--border-color);
+  --color-toggle-off: var(--toggle-off-bg);
 }
 
 @layer base {
+  :root {
+    --bg-body: #f4f7f6;
+    --bg-surface: #ffffff;
+    --bg-sub: #fafafa;
+    --bg-header: #f5f5f5;
+
+    --text-primary: #111111;
+    --text-secondary: #444444;
+    --text-muted: #888888;
+
+    --primary-color: #009688;
+    --border-color: #ddd;
+    --toggle-off-bg: #d8d8d8;
+  }
+
+  .dark {
+    --bg-body: #121212;
+    --bg-surface: #1e1e1e;
+    --bg-sub: #252525;
+    --bg-header: #2c2c2c;
+
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #777777;
+
+    --primary-color: #4db6ac;
+    --border-color: #424242;
+    --toggle-off-bg: #5c5c5c;
+  }
 
   /* 영문 몬스터 종족/타입 표기 */
   @font-face {
@@ -114,7 +164,8 @@
   }
 
   body {
-    background-color: #f3f4f6;
-    color: #1f2937;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
