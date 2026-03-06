@@ -73,9 +73,18 @@ export default async function getCroppedImg(
         throw new Error('No 2d context');
     }
 
+    // 성능 최적화: 결과물 이미지의 최대 너비/높이를 800px로 스케일링
+    const MAX_DIMENSION = 800;
+    let scale = 1;
+    if (pixelCrop.width > MAX_DIMENSION || pixelCrop.height > MAX_DIMENSION) {
+        scale = MAX_DIMENSION / Math.max(pixelCrop.width, pixelCrop.height);
+    }
+    const targetWidth = pixelCrop.width * scale;
+    const targetHeight = pixelCrop.height * scale;
+
     // Set the size of the cropped canvas
-    croppedCanvas.width = pixelCrop.width;
-    croppedCanvas.height = pixelCrop.height;
+    croppedCanvas.width = targetWidth;
+    croppedCanvas.height = targetHeight;
 
     // Draw the cropped image onto the new canvas
     croppedCtx.drawImage(
@@ -86,10 +95,10 @@ export default async function getCroppedImg(
         pixelCrop.height,
         0,
         0,
-        pixelCrop.width,
-        pixelCrop.height
+        targetWidth,
+        targetHeight
     );
 
-    // Return base64 encoded string
-    return croppedCanvas.toDataURL('image/png');
+    // Return base64 encoded string - webp로 압축하여 base64 문자열 최적화 (Safari 14+ 지원)
+    return croppedCanvas.toDataURL('image/webp', 0.9);
 }

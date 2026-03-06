@@ -113,8 +113,8 @@ export const useCardStore = create<CardState>()(
         {
             name: 'cardmaker-state', // localStorage 키 이름
             partialize: (state) => {
-                // updateField 함수는 직렬화 불가이므로 제외하고 나머지 데이터만 저장
-                const { updateField: _, ...rest } = state
+                // updateField 함수와 cardImage(용량 초과 방지)는 직렬화 불가이므로 제외하고 나머지 데이터만 저장
+                const { updateField: _, cardImage: __, ...rest } = state
                 return rest
             },
         }
