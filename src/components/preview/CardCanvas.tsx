@@ -91,7 +91,7 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
                 } else {
                     // 일반 카드 렌더링 (비율 1:1)
                     // X = 86, Y = 194, Width = 642, Height = 642 (기존 설정값)
-                    ctx.drawImage(cardImg, 86, 194, 642, 642);
+                    ctx.drawImage(cardImg, 100, 220, 614, 614);
                 }
             } catch (e) {
                 console.warn('일러스트 렌더링 실패', e);
