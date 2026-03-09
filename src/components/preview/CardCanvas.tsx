@@ -1,11 +1,14 @@
 import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { useCardStore } from '../../store/useCardStore';
 
-const CANVAS_WIDTH = 813;
-const CANVAS_HEIGHT = 1185;
+const CANVAS_WIDTH = 913;
+const CANVAS_HEIGHT = 1331;
+const INTERNAL_WIDTH = 813;
+const INTERNAL_HEIGHT = 1185;
 
-interface CardCanvasProps { }
-
+interface CardCanvasProps {
+    onIllustrationClick?: () => void;
+}
 // 폰트 로딩 완료 여부 (최초 1회만 수행)
 let fontsReady = false;
 const ensureFontsLoaded = async () => {
@@ -41,7 +44,7 @@ export interface CardCanvasRef {
     download: (fileName: string) => void;
 }
 
-export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) => {
+export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>(({ onIllustrationClick }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -77,8 +80,12 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
         const ctx = offscreen.getContext('2d');
         if (!ctx) return;
 
+        // Scale context to fit internal design resolution (813x1185) to target resolution (913x1331)
+        ctx.save();
+        ctx.scale(CANVAS_WIDTH / INTERNAL_WIDTH, CANVAS_HEIGHT / INTERNAL_HEIGHT);
+
         // 1. Clear Canvas (오프스크린)
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.clearRect(0, 0, INTERNAL_WIDTH, INTERNAL_HEIGHT);
 
         // 1.5 Draw Card Image (Illustration) under the frame
         if (store.cardImage) {
@@ -101,7 +108,7 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
         // 2. Load and Draw Background Frame
         const frameSrc = getFrameSource(store.cardType, store.cardClass, store.isPendulum);
         const frameImg = await loadImage(`/assets/images/${frameSrc}`);
-        ctx.drawImage(frameImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.drawImage(frameImg, 0, 0, INTERNAL_WIDTH, INTERNAL_HEIGHT);
 
         // 3. Draw Attribute (몬스터 / 일반 토큰에 표시)
         if (store.attribute && (store.cardType === '몬스터' || (store.cardType === '토큰' && store.cardClass === '일반'))) {
@@ -384,6 +391,8 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
             // Width/Height: Approx 35x35 based on layout
             ctx.drawImage(holoImg, 750, 1119, 36, 36);
         }
+        ctx.restore();
+
         // 모든 드로잉 완료 후, 아직 최신 렌더라면 메인 캔버스에 한 번에 복사 (더블 버퍼링)
         if (myId !== renderIdRef.current) return;
         const mainCtx = canvas.getContext('2d');
@@ -422,9 +431,20 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>((_, ref) =>
                 className="w-full h-full object-contain"
             />
 
-
-
-
+            {/* 일러스트 클릭 오버레이 */}
+            {onIllustrationClick && (
+                <div
+                    className="absolute cursor-pointer hover:bg-black/10 transition-colors z-10 rounded-sm"
+                    style={{
+                        left: store.isPendulum ? '6.03%' : '12.30%',
+                        top: store.isPendulum ? '17.97%' : '18.57%',
+                        width: store.isPendulum ? '87.95%' : '75.52%',
+                        height: store.isPendulum ? '44.78%' : '51.81%',
+                    }}
+                    onClick={onIllustrationClick}
+                    title="이미지 첨부 (클릭)"
+                />
+            )}
         </div>
     );
 });

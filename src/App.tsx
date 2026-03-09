@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, DragEvent } from 'react'
 import { DataEditor } from './components/editor/DataEditor'
 import { CardCanvas, CardCanvasRef } from './components/preview/CardCanvas'
 import { ImageCropModal } from './components/ui/ImageCropModal'
@@ -21,6 +21,7 @@ function App() {
 
   // ── 이미지 크롭 모달 ──
   const [cropImageUrl, setCropImageUrl] = useState<string | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +30,26 @@ function App() {
     const url = URL.createObjectURL(file)
     setCropImageUrl(url)
     e.target.value = '' // 동일 파일 재선택 허용
+  }
+
+  // ── 드래그 앤 드롭 ──
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files?.[0]
+    if (!file || !file.type.startsWith('image/')) return
+    const url = URL.createObjectURL(file)
+    setCropImageUrl(url)
   }
 
   const cardCanvasRef = useRef<CardCanvasRef>(null)
@@ -161,7 +182,20 @@ function App() {
 
         {/* ── 카드 미리보기 ── */}
         {/* flex-grow: 1 (같이 늘어남), flex-shrink: 10 (우선적으로 줄어듦), flex-basis: 480px */}
-        <div className="md:flex-[1_10_480px] shrink-0 bg-bg-body flex flex-col items-center justify-start md:justify-center p-5 md:p-8 md:h-full">
+        <div
+          className="md:flex-[1_10_480px] shrink-0 bg-bg-body flex flex-col items-center justify-start md:justify-center p-5 md:p-8 md:h-full relative"
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
+        >
+          {isDragging && (
+            <div className="absolute inset-0 z-50 rounded-xl border-4 border-primary border-dashed bg-primary/5 m-4 pointer-events-none flex items-center justify-center">
+              <div className="bg-bg-body px-6 py-3 rounded-lg shadow-lg font-bold text-primary">
+                이미지 파일 놓기
+              </div>
+            </div>
+          )}
           <div className="w-full flex flex-col items-center">
             {/* 카드 캔버스: width/height 직접 제어 (transition으로 부드럽게) */}
             <div
@@ -175,7 +209,10 @@ function App() {
             >
               {/* 그림자 레이어: 카드보다 1px 작아 박스는 안 보이고 그림자만 표시 */}
               <div className="absolute shadow-xl pointer-events-none" style={{ inset: 1 }} />
-              <CardCanvas ref={cardCanvasRef} />
+              <CardCanvas
+                ref={cardCanvasRef}
+                onIllustrationClick={() => imageInputRef.current?.click()}
+              />
             </div>
 
             {/* 버튼 그룹 */}
