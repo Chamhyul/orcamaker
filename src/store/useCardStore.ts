@@ -63,6 +63,10 @@ export interface CardState {
     copyrightType: 1 | 2
     cardImage: string | null
 
+    // 6. 폰트 크기 설정
+    cardTextFontSize: number
+    pendulumTextFontSize: number
+
     // --- Setter Actions ---
     updateField: <K extends keyof Omit<CardState, 'updateField'>>(field: K, value: CardState[K]) => void
 }
@@ -107,6 +111,9 @@ export const useCardStore = create<CardState>()(
             showCopyright: false,
             copyrightType: 2,
             cardImage: null,
+
+            cardTextFontSize: 21,
+            pendulumTextFontSize: 26,
 
             updateField: (field, value) => set((state) => ({ ...state, [field]: value })),
         }),

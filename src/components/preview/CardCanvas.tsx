@@ -223,10 +223,10 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>(({ onIllust
             ctx.font = `26px "${pTextFont}", sans-serif`;
             ctx.fillStyle = 'black';
             const pTextX = 129;
-            const pTextY = 773;
+            const pTextY = 753; // 기존 773(베이스라인)에서 상단 기준으로 보정
             const pMaxWidth = 556;
             const pMaxHeight = 117;
-            drawAutoSizedText(ctx, store.pendulumText, pTextX, pTextY, pMaxWidth, pMaxHeight, store.language, 26);
+            drawAutoSizedText(ctx, store.pendulumText, pTextX, pTextY, pMaxWidth, pMaxHeight, store.language, store.pendulumTextFontSize);
         }
 
         // 6. Draw Race/Type [Race / Class / Effect]
@@ -248,15 +248,21 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>(({ onIllust
         let maxHeight = 151;
 
         if (store.cardType === '마법' || store.cardType === '함정' || (store.cardType === '토큰' && store.cardClass === '스탯X')) {
-            // 종족 라인이 없는 경우 위치 조정 (추후 사용자가 오프셋 조정 가능)
+            // 종족 라인이 없는 경우 위치 조정
             textX = 64;
-            textY = 914;
+            textY = 896; // 기존 914(베이스라인)에서 보정
             maxWidth = 684;
             maxHeight = 178;
+        } else {
+            // 몬스터 등 종족 라인이 있는 경우
+            textX = 64;
+            textY = 928; // 기존 945(베이스라인)에서 보정
+            maxWidth = 684;
+            maxHeight = 151;
         }
 
         ctx.fillStyle = 'black';
-        drawAutoSizedText(ctx, store.cardText, textX, textY, maxWidth, maxHeight, store.language, CARD_TEXT_DEFAULT_FONT_SIZE);
+        drawAutoSizedText(ctx, store.cardText, textX, textY, maxWidth, maxHeight, store.language, store.cardTextFontSize);
 
         // 8. Draw ATK / DEF
         if (store.cardType === '몬스터' || (store.cardType === '토큰' && store.cardClass === '일반')) {
@@ -544,6 +550,10 @@ const drawAutoSizedText = (ctx: CanvasRenderingContext2D, text: string, x: numbe
     const textFont = lang === 'en' ? 'text_en' : lang === 'ja' ? 'text_jp' : 'text_kr';
     ctx.font = `${fontSize}px "${textFont}", sans-serif`;
 
+    // 텍스트 상단 정렬 설정 (폰트 크기 변화에도 첫 줄 위치 고정)
+    const oldBaseline = ctx.textBaseline;
+    ctx.textBaseline = 'top';
+
     // Auto-scaling logic: simple version
     let lines = wrapText(ctx, text, maxWidth);
     while (lines.length * (fontSize * 1.2) > maxHeight && fontSize > 10) {
@@ -554,7 +564,6 @@ const drawAutoSizedText = (ctx: CanvasRenderingContext2D, text: string, x: numbe
 
     lines.forEach((lineObj, i) => {
         const lineText = lineObj.text;
-        // 다음 줄이 빈 줄이거나 사용자가 직접 \n으로 끊은 줄인 경우 양쪽 정렬(justify) 예외 처리
         const isLastLine = i === lines.length - 1 || lineObj.isExplicitBreak || lines[i + 1].text === '';
 
         if (isLastLine || lineText.trim() === '') {
@@ -579,6 +588,9 @@ const drawAutoSizedText = (ctx: CanvasRenderingContext2D, text: string, x: numbe
             currentX += ctx.measureText(word).width + spaceWidth;
         });
     });
+
+    // 베이스라인 복구
+    ctx.textBaseline = oldBaseline;
 };
 
 const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number) => {

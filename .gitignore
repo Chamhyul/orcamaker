@@ -27,3 +27,4 @@ _original_fonts_backup
 .env
 .env.*
 .vercel
+.env*.local

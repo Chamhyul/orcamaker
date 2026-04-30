@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { AArrowUp, AArrowDown, RotateCcw } from 'lucide-react'
 import { useCardStore, CardAttribute, CardType, CardClass, MonsterRace, EffectType } from '../../store/useCardStore'
 import { FormRow, SegmentControl, Select, Input, ToggleSwitch } from '../ui/Controls'
 
@@ -426,14 +427,58 @@ export function DataEditor() {
                                 <div className="w-[1px] bg-border h-full" />
 
                                 {/* 중앙 펜듈럼 텍스트 */}
-                                <textarea
-                                    ref={pendulumTextareaRef}
-                                    className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted resize-none h-full"
-                                    placeholder="펜듈럼 텍스트"
-                                    value={store.pendulumText}
-                                    onChange={(e) => store.updateField('pendulumText', e.target.value)}
-                                    onFocus={() => setLastFocusedTextarea('pendulumText')}
-                                />
+                                <div className="flex-1 flex min-w-0 bg-transparent">
+                                    <textarea
+                                        ref={pendulumTextareaRef}
+                                        className="flex-1 bg-transparent px-3 py-2 text-sm outline-none text-text-primary placeholder-text-muted resize-none h-full"
+                                        placeholder="펜듈럼 텍스트"
+                                        value={store.pendulumText}
+                                        onChange={(e) => store.updateField('pendulumText', e.target.value)}
+                                        onFocus={() => setLastFocusedTextarea('pendulumText')}
+                                    />
+                                    <div className="flex flex-col border-l border-border/50 bg-bg-header/20">
+                                        <button
+                                            onClick={() => store.updateField('pendulumTextFontSize', Math.min(store.pendulumTextFontSize + 1, 50))}
+                                            className="h-7 flex items-center justify-center hover:bg-bg-header/50 text-text-muted hover:text-primary transition-colors border-b border-border/50"
+                                            title="글자 크기 크게"
+                                        >
+                                            <AArrowUp size={12} />
+                                        </button>
+                                        <div className="flex-1 flex items-center border-b border-border/50 min-h-[32px]">
+                                            <input
+                                                type="text"
+                                                className="w-8 bg-transparent text-[11px] font-bold text-center outline-none text-primary"
+                                                value={store.pendulumTextFontSize}
+                                                onChange={(e) => {
+                                                    const val = e.target.value.replace(/[^0-9]/g, '');
+                                                    if (val === '') {
+                                                        store.updateField('pendulumTextFontSize', 0);
+                                                    } else {
+                                                        const num = parseInt(val);
+                                                        store.updateField('pendulumTextFontSize', Math.min(num, 50));
+                                                    }
+                                                }}
+                                                onBlur={() => {
+                                                    if (store.pendulumTextFontSize < 5) store.updateField('pendulumTextFontSize', 5);
+                                                }}
+                                            />
+                                            <button
+                                                onClick={() => store.updateField('pendulumTextFontSize', 26)}
+                                                className="p-1 text-text-muted hover:text-primary hover:bg-bg-header/50 transition-colors"
+                                                title="크기 초기화 (26)"
+                                            >
+                                                <RotateCcw size={10} />
+                                            </button>
+                                        </div>
+                                        <button
+                                            onClick={() => store.updateField('pendulumTextFontSize', Math.max(store.pendulumTextFontSize - 1, 5))}
+                                            className="h-7 flex items-center justify-center hover:bg-bg-header/50 text-text-muted hover:text-primary transition-colors"
+                                            title="글자 크기 작게"
+                                        >
+                                            <AArrowDown size={12} />
+                                        </button>
+                                    </div>
+                                </div>
 
                                 <div className="w-[1px] bg-border h-full" />
 
@@ -459,14 +504,58 @@ export function DataEditor() {
                         )}
 
                         <FormRow>
-                            <textarea
-                                ref={textareaRef}
-                                className="w-full h-32 bg-bg-sub border border-border text-text-primary text-sm p-3 rounded-md resize-y outline-none"
-                                placeholder="카드 텍스트"
-                                value={store.cardText}
-                                onChange={(e) => store.updateField('cardText', e.target.value)}
-                                onFocus={() => setLastFocusedTextarea('cardText')}
-                            />
+                            <div className="flex w-full bg-bg-sub border border-border rounded-md transition-colors overflow-hidden">
+                                <textarea
+                                    ref={textareaRef}
+                                    className="flex-1 h-32 bg-transparent text-text-primary text-sm p-3 resize-y outline-none"
+                                    placeholder="카드 텍스트"
+                                    value={store.cardText}
+                                    onChange={(e) => store.updateField('cardText', e.target.value)}
+                                    onFocus={() => setLastFocusedTextarea('cardText')}
+                                />
+                                <div className="flex flex-col border-l border-border/50 shrink-0 bg-bg-header/20">
+                                    <button
+                                        onClick={() => store.updateField('cardTextFontSize', Math.min(store.cardTextFontSize + 1, 50))}
+                                        className="h-8 flex items-center justify-center hover:bg-bg-header/50 text-text-muted hover:text-primary transition-colors border-b border-border/50"
+                                        title="글자 크기 크게"
+                                    >
+                                        <AArrowUp size={14} />
+                                    </button>
+                                    <div className="flex-1 flex items-center border-b border-border/50 px-1 min-h-[40px]">
+                                        <input
+                                            type="text"
+                                            className="w-10 bg-transparent text-xs font-bold text-center outline-none text-primary"
+                                            value={store.cardTextFontSize}
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/[^0-9]/g, '');
+                                                if (val === '') {
+                                                    store.updateField('cardTextFontSize', 0);
+                                                } else {
+                                                    const num = parseInt(val);
+                                                    store.updateField('cardTextFontSize', Math.min(num, 50));
+                                                }
+                                            }}
+                                            onBlur={() => {
+                                                if (store.cardTextFontSize < 5) store.updateField('cardTextFontSize', 5);
+                                            }}
+                                        />
+                                        <button
+                                            onClick={() => store.updateField('cardTextFontSize', 21)}
+                                            className="p-1 text-text-muted hover:text-primary hover:bg-bg-header/50 transition-colors"
+                                            title="크기 초기화 (21)"
+                                        >
+                                            <RotateCcw size={12} />
+                                        </button>
+                                    </div>
+                                    <button
+                                        onClick={() => store.updateField('cardTextFontSize', Math.max(store.cardTextFontSize - 1, 5))}
+                                        className="h-8 flex items-center justify-center hover:bg-bg-header/50 text-text-muted hover:text-primary transition-colors"
+                                        title="글자 크기 작게"
+                                    >
+                                        <AArrowDown size={14} />
+                                    </button>
+                                </div>
+                            </div>
                         </FormRow>
 
                         {/* 넘버링 툴바 (카드 텍스트와 일반/효과 세그먼트 사이) */}
