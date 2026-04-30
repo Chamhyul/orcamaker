@@ -240,8 +240,6 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>(({ onIllust
         }
 
         // 7. Draw Card Text (Effect / Flavor)
-        // ── 카드 텍스트 기본 폰트 크기 (여기서 조절하세요) ──
-        const CARD_TEXT_DEFAULT_FONT_SIZE = 21;
         let textX = 64;
         let textY = 945;
         let maxWidth = 684;
