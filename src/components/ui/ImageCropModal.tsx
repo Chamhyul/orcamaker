@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Cropper from 'react-easy-crop';
 import { Area } from 'react-easy-crop';
 import getCroppedImg from '../../utils/getCroppedImg';
@@ -21,7 +21,7 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
         setCroppedAreaPixels(croppedAreaPixels);
     }, []);
 
-    const handleSave = async () => {
+    const handleSave = useCallback(async () => {
         if (!croppedAreaPixels) return;
         setIsSaving(true);
         try {
@@ -34,7 +34,20 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
         } finally {
             setIsSaving(false);
         }
-    };
+    }, [croppedAreaPixels, imageUrl, onClose, store]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSave();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleSave]);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
