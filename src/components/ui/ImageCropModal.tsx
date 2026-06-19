@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Cropper from 'react-easy-crop';
 import { Area } from 'react-easy-crop';
 import getCroppedImg from '../../utils/getCroppedImg';
@@ -16,6 +16,13 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const [isShiftPressed, setIsShiftPressed] = useState(false);
+    const cropRef = useRef(crop);
+    const interactionStartCrop = useRef<{ x: number; y: number } | null>(null);
+
+    useEffect(() => {
+        cropRef.current = crop;
+    }, [crop]);
 
     const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -36,16 +43,51 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
         }
     }, [croppedAreaPixels, imageUrl, onClose, store]);
 
+    const handleCropChange = useCallback((newCrop: { x: number; y: number }) => {
+        if (isShiftPressed && interactionStartCrop.current) {
+            const start = interactionStartCrop.current;
+            const dx = Math.abs(newCrop.x - start.x);
+            const dy = Math.abs(newCrop.y - start.y);
+            if (dx > dy) {
+                setCrop({ x: newCrop.x, y: start.y });
+            } else {
+                setCrop({ x: start.x, y: newCrop.y });
+            }
+        } else {
+            setCrop(newCrop);
+        }
+    }, [isShiftPressed]);
+
+    const handleInteractionStart = useCallback(() => {
+        interactionStartCrop.current = { ...cropRef.current };
+    }, []);
+
+    const handleInteractionEnd = useCallback(() => {
+        interactionStartCrop.current = null;
+    }, []);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 handleSave();
             }
+            if (e.key === 'Shift') {
+                setIsShiftPressed(true);
+            }
         };
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.key === 'Shift') {
+                setIsShiftPressed(false);
+            }
+        };
+
         window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
         };
     }, [handleSave]);
 
@@ -66,9 +108,11 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
                         zoom={zoom}
                         // 펜듈럼 비율 715:661 (실제 렌더링 넓이(715)와 높이(661) 반영), 일반은 1:1
                         aspect={isPendulum ? 715 / 661 : 1}
-                        onCropChange={setCrop}
+                        onCropChange={handleCropChange}
                         onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
+                        onInteractionStart={handleInteractionStart}
+                        onInteractionEnd={handleInteractionEnd}
                     />
                 </div>
 
@@ -80,7 +124,7 @@ export function ImageCropModal({ imageUrl, onClose }: ImageCropModalProps) {
                             value={zoom}
                             min={1}
                             max={3}
-                            step={0.1}
+                            step={0.01}
                             aria-labelledby="Zoom"
                             onChange={(e) => {
                                 setZoom(Number(e.target.value));
