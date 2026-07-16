@@ -93,12 +93,12 @@ export const CardCanvas = forwardRef<CardCanvasRef, CardCanvasProps>(({ onIllust
                 const cardImg = await loadImage(store.cardImage);
                 if (store.isPendulum) {
                     // 펜듈럼 카드 렌더링 (비율 715:661, 텍스트 칸 뒤쪽까지 커버)
-                    // X = 49, Y = 213, Width = 715, Height = 661 (비율과 위치 조정 완료)
-                    ctx.drawImage(cardImg, 49, 213, 715, 661);
+                    // X = 49, Y = 212, Width = 715, Height = 662 (1px 위로 올리고 높이 1px 증가)
+                    ctx.drawImage(cardImg, 49, 212, 715, 662);
                 } else {
                     // 일반 카드 렌더링 (비율 1:1)
-                    // X = 86, Y = 194, Width = 642, Height = 642 (기존 설정값)
-                    ctx.drawImage(cardImg, 100, 220, 614, 614);
+                    // X = 100, Y = 219, Width = 614, Height = 615 (1px 위로 올리고 높이 1px 증가)
+                    ctx.drawImage(cardImg, 100, 219, 614, 615);
                 }
             } catch (e) {
                 console.warn('일러스트 렌더링 실패', e);
